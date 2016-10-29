@@ -2,10 +2,9 @@ var React = require('react');
 var ReactDOM = require('react-dom');
 
 var Card = function (props) {
-    var name = 'This is a Card';
     return (
         <div className="card">
-            <div className="card-name">{name}</div>
+            <div className="card-name">{props.name}</div>
         </div>
     );
 };
@@ -13,30 +12,29 @@ var Card = function (props) {
 var List = React.createClass({
     render: function (props) {
         var title = 'This is a list title';
-        var cards = [];
-        for (var i = 0; i < 3; i++) {
-            cards.push(<Card />);
-        }
         return (
             <div className="list">
                 {title}
-                {cards}
-                <input className="cardInput" onChange={this.props.onInputChange}/>  <button onClick={this.props.onAddInputChanged}> Submit </button>
+                {this.state.cards}
+                <input className="cardInput" onChange={this.onInputChange}/>  <button onClick={this.onAddInputChanged}> Submit </button>
                 <hr />
             </div>
         );
     },
      getInitialState: function() {
-         return {coll: []}
+         return {cards: [], current: ''}
      },
      onInputChange: function(event){
-         console.log('OnChange', event)
+         this.setState({current: event.target.value});
      }, 
      onAddInputChanged: function(event){
          event.preventDefault();
-         console.log('Input change', event)
+         var cards = this.state.cards;
+         cards.push(<Card name={this.state.current}/>)
+         this.setState({cards: cards})
      }
 });
+
 
 var Board = React.createClass({
     render: function (props) {
@@ -53,8 +51,6 @@ var Board = React.createClass({
         );
     }
 });
-
-
 
 
 document.addEventListener('DOMContentLoaded', function () {
